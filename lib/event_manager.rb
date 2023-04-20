@@ -31,12 +31,13 @@ def legislators_by_zipcode(zipcode)
   end
 end
 
-def save_thank_you_letter(id, form_letter)
+def save_thank_you_letter(id, form_letter, phone_number = nil)
   Dir.mkdir('output') unless Dir.exist?('output')
   filename = "output/#{id}.html"
   File.open(filename, 'w') do |file|
     file.puts form_letter
   end
+  save_thank_you_letter(phone_number, form_letter) if phone_number
 end
 
 puts 'Event Manager Initialized!'
@@ -62,5 +63,5 @@ content.each do |row|
 
   form_letter = erb_template.result(binding)
 
-  save_thank_you_letter(id, form_letter)
+  save_thank_you_letter(id, form_letter, phone_number)
 end
