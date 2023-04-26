@@ -21,7 +21,7 @@ def draw_chart(data_hash, data_type)
   puts BASE_URL + chart_hour + chart_frequency
   chart_image = URI.open(BASE_URL + chart_hour + chart_frequency).read
   Dir.mkdir('../analyzed_data') unless Dir.exist?('../analyzed_data')
-  File.open("../analyzed_data/#{data_type}.png", 'w') { |file| file.write chart_image}
+  File.open("../analyzed_data/#{data_type}.png", 'w') { |file| file.write chart_image }
 end
 
 def clean_zipcode(zipcode)
@@ -79,16 +79,15 @@ erb_template = ERB.new template_letter
 hours_counted = {}
 days_counted = {}
 
-
 content.each do |row|
   id = row[0]
   name = row[:first_name]
 
-  time = Time.strptime(row[:regdate], '%m/%d/%Y %k:%M') 
+  time = Time.strptime(row[:regdate], '%m/%d/%Y %k:%M')
   hour = time.hour
   hours_counted = count(hours_counted, hour)
 
-  day = time.strftime("%A")
+  day = time.strftime('%A')
   days_counted = count(days_counted, day)
 
   phone_number = clean_phone_number(row[:homephone])
@@ -104,9 +103,8 @@ end
 
 hours_counted = hours_counted.to_a.sort { |a, b| a[0] - b[0] }.to_h
 
-days_counted = Date::DAYNAMES.inject({}) do |hash, day|
-  hash[day] = days_counted[day] ? days_counted[day] : 0
-  hash
+days_counted = Date::DAYNAMES.each_with_object({}) do |day, hash|
+  hash[day] = days_counted[day] || 0
 end
 
 draw_chart(hours_counted, 'hour')
