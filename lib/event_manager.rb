@@ -88,7 +88,7 @@ content.each do |row|
   hour = time.hour
   hours_counted = count(hours_counted, hour)
 
-  day = Date.strptime(row[:regdate].split[0].insert(-3, "20"), '%m/%d/%Y').wday
+  day = time.strftime("%A")
   days_counted = count(days_counted, day)
 
   phone_number = clean_phone_number(row[:homephone])
@@ -104,14 +104,10 @@ end
 
 hours_counted = hours_counted.to_a.sort { |a, b| a[0] - b[0] }.to_h
 
-index = 0
 days_counted = Date::DAYNAMES.inject({}) do |hash, day|
-  hash[day] = days_counted[index] ? days_counted[index] : 0
-  index += 1
+  hash[day] = days_counted[day] ? days_counted[day] : 0
   hash
 end
 
-p hours_counted
-p days_counted
 draw_chart(hours_counted, 'hour')
 draw_chart(days_counted, 'day')
